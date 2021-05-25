@@ -6,24 +6,65 @@ include $(CLEAR_VARS)
 # LOCAL_MODULE 变量存储要构建的模块的名称，每个模块中使用一次此变量
 # 每个模块名称必须唯一，且不含任何空格
 LOCAL_MODULE := FraunhoferAAC
-# 列举源文件，以空格分隔多个文件
-# LOCAL_SRC_FILES := libAACdec/src/*.cpp libAACenc/src/*.cpp libPCMutils/src/*.cpp \
-#     libFDK/src/*.cpp libSYS/src/*.cpp libMpegTPDec/src/*.cpp libMpegTPEnc/src/*.cpp \
-#     libSBRdec/src/*.cpp libSBRenc/src/*.cpp libArithCoding/src/*.cpp libDRCdec/src/*.cpp \
-#     libSACdec/src/*.cpp libSACenc/src/*.cpp
-FILE_LIST := $(wildcard $(LOCAL_PATH)/../*.cpp)
-LOCAL_SRC_FILES := $(FILE_LIST:$(LOCAL_PATH)/%=%)
+
+
+# 头文件
+HEADER_LIST := $(wildcard $(LOCAL_PATH)/libFDK/include/*.h)
+HEADER_LIST += $(wildcard $(LOCAL_PATH)/libFDK/include/*/*.h)
+HEADER_LIST += $(wildcard $(LOCAL_PATH)/libAACdec/include/*.h)
+HEADER_LIST += $(wildcard $(LOCAL_PATH)/libAACenc/include/*.h)
+HEADER_LIST += $(wildcard $(LOCAL_PATH)/libPCMutils/include/*.h)
+HEADER_LIST += $(wildcard $(LOCAL_PATH)/libSYS/include/*.h)
+HEADER_LIST += $(wildcard $(LOCAL_PATH)/libMpegTPDec/include/*.h)
+HEADER_LIST += $(wildcard $(LOCAL_PATH)/libMpegTPEnc/include/*.h)
+HEADER_LIST += $(wildcard $(LOCAL_PATH)/libSBRdec/include/*.h)
+HEADER_LIST += $(wildcard $(LOCAL_PATH)/libSBRenc/include/*.h)
+HEADER_LIST += $(wildcard $(LOCAL_PATH)/libArithCoding/include/*.h)
+HEADER_LIST += $(wildcard $(LOCAL_PATH)/libDRCdec/include/*.h)
+HEADER_LIST += $(wildcard $(LOCAL_PATH)/libSACdec/include/*.h)
+HEADER_LIST += $(wildcard $(LOCAL_PATH)/libSACenc/include/*.h)
+# LOCAL_C_INCLUDES := $(HEADER_LIST:$(LOCAL_PATH)/%=%)
+LOCAL_C_INCLUDES := $(HEADER_LIST)
+$(info "LOCAL_C_INCLUDES = $(LOCAL_C_INCLUDES)")
+
+# 列举源文件，以空格分隔多个文件，遍历src目录
+SRC_LIST += $(wildcard $(LOCAL_PATH)/libAACdec/src/*.cpp)
+SRC_LIST += $(wildcard $(LOCAL_PATH)/libAACdec/src/*/*.cpp)
+SRC_LIST += $(wildcard $(LOCAL_PATH)/libAACenc/src/*.cpp)
+SRC_LIST += $(wildcard $(LOCAL_PATH)/libPCMutils/src/*.cpp)
+SRC_LIST += $(wildcard $(LOCAL_PATH)/libFDK/src/*.cpp)
+SRC_LIST += $(wildcard $(LOCAL_PATH)/libFDK/src/*/*.cpp)
+SRC_LIST += $(wildcard $(LOCAL_PATH)/libSYS/src/*.cpp)
+SRC_LIST += $(wildcard $(LOCAL_PATH)/libMpegTPDec/src/*.cpp)
+SRC_LIST += $(wildcard $(LOCAL_PATH)/libMpegTPEnc/src/*.cpp)
+SRC_LIST += $(wildcard $(LOCAL_PATH)/libSBRdec/src/*.cpp)
+SRC_LIST += $(wildcard $(LOCAL_PATH)/libSBRdec/src/*/*.cpp)
+SRC_LIST += $(wildcard $(LOCAL_PATH)/libSBRenc/src/*.cpp)
+SRC_LIST += $(wildcard $(LOCAL_PATH)/libArithCoding/src/*.cpp)
+SRC_LIST += $(wildcard $(LOCAL_PATH)/libDRCdec/src/*.cpp)
+SRC_LIST += $(wildcard $(LOCAL_PATH)/libSACdec/src/*.cpp)
+SRC_LIST += $(wildcard $(LOCAL_PATH)/libSACenc/src/*.cpp)
+LOCAL_SRC_FILES := $(SRC_LIST:$(LOCAL_PATH)/%=%)
+$(info "HEADER_LIST = $(LOCAL_C_INCLUDES)")
+# $(info "SRC_LIST = $(LOCAL_SRC_FILES)")
+
+
 # cflags
 LOCAL_CFLAGS := -DANDROID
-LOCAL_CFLAGS += -Werror -Wno-unused-parameter -Wno-warnings -Wuninitialized -Wno-self-assign -Wno-implicit-fallthrough
-LOCAL_LDLIBS := -lz -llog -landroid
+LOCAL_CFLAGS += -Werror -Wno-unused-parameter -Wno-#warnings -Wuninitialized -Wno-self-assign -Wno-implicit-fallthrough
+LOCAL_LDLIBS := -lz -llog -landroid -lm
 
-# 导出头动态库的文件
-LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)/libAACdec/include $(LOCAL_PATH)/libAACenc/include \
-    $(LOCAL_PATH)/libPCMutils/include $(LOCAL_PATH)/libFDK/include $(LOCAL_PATH)/libSYS/include \
-    $(LOCAL_PATH)/libMpegTPDec/include $(LOCAL_PATH)/libMpegTPEnc/include $(LOCAL_PATH)/libSBRdec/include \
-    $(LOCAL_PATH)/libSBRenc/include $(LOCAL_PATH)/libArithCoding/include $(LOCAL_PATH)/libDRCdec/include \
-    $(LOCAL_PATH)/libSACdec/include $(LOCAL_PATH)/libSACenc/include
+LOCAL_EXPORT_C_INCLUDE_DIRS := ./jni/fdkaac/$(TARGET_ARCH_ABI)/include
+# $(info "LOCAL_EXPORT_C_INCLUDE_DIRS = $(LOCAL_EXPORT_C_INCLUDE_DIRS)")
+
+
+LOCAL_EXPORT_SHARED_LIBRARY_HEADERS := $(HEADER_LIST:$(LOCAL_PATH)/%=%)
+LOCAL_EXPORT_STATIC_LIBRARY_HEADERS := $(HEADER_LIST:$(LOCAL_PATH)/%=%)
+# $(info "LOCAL_EXPORT_SHARED_LIBRARY_HEADERS = $(LOCAL_EXPORT_SHARED_LIBRARY_HEADERS)")
+
+# 设置输出目录
+NDK_APP_DST_DIR := ./jni/fdkaac/$(TARGET_ARCH_ABI)/lib
+
 
 # BUILD_SHARED_LIBRARY 变量指向一个 GNU Makefile 脚本，该脚本会收集最近 include 以来在 LOCAL_XXX 变量中定义的所有信息
 # 此脚本确定要构建的内容以及构建方式
@@ -31,4 +72,5 @@ LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)/libAACdec/include $(LOCAL_PATH)/libAACe
 # BUILD_SHARED_LIBRARY 动态库
 # BUILD_EXECUTABLE 可执行文件
 include $(BUILD_SHARED_LIBRARY)
+# include $(BUILD_STATIC_LIBRARY)
 
