@@ -25,7 +25,7 @@ HEADER_LIST += $(wildcard $(LOCAL_PATH)/libSACdec/include/*.h)
 HEADER_LIST += $(wildcard $(LOCAL_PATH)/libSACenc/include/*.h)
 # LOCAL_C_INCLUDES := $(HEADER_LIST:$(LOCAL_PATH)/%=%)
 LOCAL_C_INCLUDES := $(HEADER_LIST)
-$(info "LOCAL_C_INCLUDES = $(LOCAL_C_INCLUDES)")
+$(info "LOCAL_PATH = $(LOCAL_PATH)")
 
 # 列举源文件，以空格分隔多个文件，遍历src目录
 SRC_LIST += $(wildcard $(LOCAL_PATH)/libAACdec/src/*.cpp)
@@ -44,26 +44,27 @@ SRC_LIST += $(wildcard $(LOCAL_PATH)/libArithCoding/src/*.cpp)
 SRC_LIST += $(wildcard $(LOCAL_PATH)/libDRCdec/src/*.cpp)
 SRC_LIST += $(wildcard $(LOCAL_PATH)/libSACdec/src/*.cpp)
 SRC_LIST += $(wildcard $(LOCAL_PATH)/libSACenc/src/*.cpp)
-LOCAL_SRC_FILES := $(SRC_LIST:$(LOCAL_PATH)/%=%)
-$(info "HEADER_LIST = $(LOCAL_C_INCLUDES)")
-# $(info "SRC_LIST = $(LOCAL_SRC_FILES)")
+#LOCAL_SRC_FILES := $(SRC_LIST:$(LOCAL_PATH)/%=%)
+LOCAL_SRC_FILES := $(SRC_LIST)
 
-
-# cflags
-LOCAL_CFLAGS := -DANDROID
-LOCAL_CFLAGS += -Werror -Wno-unused-parameter -Wno-#warnings -Wuninitialized -Wno-self-assign -Wno-implicit-fallthrough
+LOCAL_CPPFLAGS += -I$(LOCAL_SRC_FILES)
+#LOCAL_CPPFLAGS += -DANDROID
+#LOCAL_CPPFLAGS += -Werror -Wno-unused-parameter -Wno-#warnings -Wuninitialized -Wno-self-assign -Wno-implicit-fallthrough
 LOCAL_LDLIBS := -lz -llog -landroid -lm
+# cflags
+#LOCAL_CFLAGS := -DANDROID
+#LOCAL_CFLAGS += -Werror -Wno-unused-parameter -Wno-#warnings -Wuninitialized -Wno-self-assign -Wno-implicit-fallthrough
 
-LOCAL_EXPORT_C_INCLUDE_DIRS := ./jni/fdkaac/$(TARGET_ARCH_ABI)/include
+#LOCAL_EXPORT_C_INCLUDE_DIRS := ./jni/fdkaac/$(TARGET_ARCH_ABI)/include
 # $(info "LOCAL_EXPORT_C_INCLUDE_DIRS = $(LOCAL_EXPORT_C_INCLUDE_DIRS)")
 
 
-LOCAL_EXPORT_SHARED_LIBRARY_HEADERS := $(HEADER_LIST:$(LOCAL_PATH)/%=%)
-LOCAL_EXPORT_STATIC_LIBRARY_HEADERS := $(HEADER_LIST:$(LOCAL_PATH)/%=%)
+#LOCAL_EXPORT_SHARED_LIBRARY_HEADERS := $(HEADER_LIST:$(LOCAL_PATH)/%=%)
+#LOCAL_EXPORT_STATIC_LIBRARY_HEADERS := $(HEADER_LIST:$(LOCAL_PATH)/%=%)
 # $(info "LOCAL_EXPORT_SHARED_LIBRARY_HEADERS = $(LOCAL_EXPORT_SHARED_LIBRARY_HEADERS)")
 
 # 设置输出目录
-NDK_APP_DST_DIR := ./jni/fdkaac/$(TARGET_ARCH_ABI)/lib
+#NDK_APP_DST_DIR := ./jni/fdkaac/$(TARGET_ARCH_ABI)/lib
 
 
 # BUILD_SHARED_LIBRARY 变量指向一个 GNU Makefile 脚本，该脚本会收集最近 include 以来在 LOCAL_XXX 变量中定义的所有信息
@@ -71,6 +72,6 @@ NDK_APP_DST_DIR := ./jni/fdkaac/$(TARGET_ARCH_ABI)/lib
 # BUILD_STATIC_LIBRARY 静态库
 # BUILD_SHARED_LIBRARY 动态库
 # BUILD_EXECUTABLE 可执行文件
-include $(BUILD_SHARED_LIBRARY)
-# include $(BUILD_STATIC_LIBRARY)
+#include $(BUILD_SHARED_LIBRARY)
+ include $(BUILD_STATIC_LIBRARY)
 
