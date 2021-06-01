@@ -7,6 +7,8 @@ include $(CLEAR_VARS)
 # 每个模块名称必须唯一，且不含任何空格
 LOCAL_MODULE := FraunhoferAAC
 
+NDK_APP_DST_DIR := ./jni/fdkaac/$(TARGET_ARCH_ABI)/lib
+
 aacdec_sources := $(wildcard $(LOCAL_PATH)/libAACdec/src/*.cpp)
 aacdec_sources := $(aacdec_sources:$(LOCAL_PATH)/libAACdec/src/%=%)
 
@@ -81,55 +83,9 @@ LOCAL_C_INCLUDES := \
         $(LOCAL_PATH)/libDRCdec/include \
 
 
-# 头文件
-#HEADER_LIST := $(wildcard $(LOCAL_PATH)/libFDK/include/*.h)
-#HEADER_LIST += $(wildcard $(LOCAL_PATH)/libFDK/include/*/*.h)
-#HEADER_LIST += $(wildcard $(LOCAL_PATH)/libAACdec/include/*.h)
-#HEADER_LIST += $(wildcard $(LOCAL_PATH)/libAACenc/include/*.h)
-#HEADER_LIST += $(wildcard $(LOCAL_PATH)/libPCMutils/include/*.h)
-#HEADER_LIST += $(wildcard $(LOCAL_PATH)/libSYS/include/*.h)
-#HEADER_LIST += $(wildcard $(LOCAL_PATH)/libMpegTPDec/include/*.h)
-#HEADER_LIST += $(wildcard $(LOCAL_PATH)/libMpegTPEnc/include/*.h)
-#HEADER_LIST += $(wildcard $(LOCAL_PATH)/libSBRdec/include/*.h)
-#HEADER_LIST += $(wildcard $(LOCAL_PATH)/libSBRenc/include/*.h)
-#HEADER_LIST += $(wildcard $(LOCAL_PATH)/libArithCoding/include/*.h)
-#HEADER_LIST += $(wildcard $(LOCAL_PATH)/libDRCdec/include/*.h)
-#HEADER_LIST += $(wildcard $(LOCAL_PATH)/libSACdec/include/*.h)
-#HEADER_LIST += $(wildcard $(LOCAL_PATH)/libSACenc/include/*.h)
-## LOCAL_C_INCLUDES := $(HEADER_LIST:$(LOCAL_PATH)/%=%)
-#LOCAL_C_INCLUDES := $(HEADER_LIST)
-#$(info "LOCAL_PATH = $(LOCAL_PATH)")
-
-# 列举源文件，以空格分隔多个文件，遍历src目录
-#SRC_LIST += $(wildcard $(LOCAL_PATH)/libAACdec/src/*.cpp)
-#SRC_LIST += $(wildcard $(LOCAL_PATH)/libAACdec/src/*/*.cpp)
-#SRC_LIST += $(wildcard $(LOCAL_PATH)/libAACenc/src/*.cpp)
-#SRC_LIST += $(wildcard $(LOCAL_PATH)/libPCMutils/src/*.cpp)
-#SRC_LIST += $(wildcard $(LOCAL_PATH)/libFDK/src/*.cpp)
-#SRC_LIST += $(wildcard $(LOCAL_PATH)/libFDK/src/*/*.cpp)
-#SRC_LIST += $(wildcard $(LOCAL_PATH)/libSYS/src/*.cpp)
-#SRC_LIST += $(wildcard $(LOCAL_PATH)/libMpegTPDec/src/*.cpp)
-#SRC_LIST += $(wildcard $(LOCAL_PATH)/libMpegTPEnc/src/*.cpp)
-#SRC_LIST += $(wildcard $(LOCAL_PATH)/libSBRdec/src/*.cpp)
-#SRC_LIST += $(wildcard $(LOCAL_PATH)/libSBRdec/src/*/*.cpp)
-#SRC_LIST += $(wildcard $(LOCAL_PATH)/libSBRenc/src/*.cpp)
-#SRC_LIST += $(wildcard $(LOCAL_PATH)/libArithCoding/src/*.cpp)
-#SRC_LIST += $(wildcard $(LOCAL_PATH)/libDRCdec/src/*.cpp)
-#SRC_LIST += $(wildcard $(LOCAL_PATH)/libSACdec/src/*.cpp)
-#SRC_LIST += $(wildcard $(LOCAL_PATH)/libSACenc/src/*.cpp)
-##LOCAL_SRC_FILES := $(SRC_LIST:$(LOCAL_PATH)/%=%)
-#LOCAL_SRC_FILES := $(SRC_LIST)
-
-#LOCAL_CPPFLAGS += -I$(LOCAL_SRC_FILES)
-#LOCAL_CPPFLAGS += -DANDROID
-#LOCAL_CPPFLAGS += -Werror -Wno-unused-parameter -Wno-#warnings -Wuninitialized -Wno-self-assign -Wno-implicit-fallthrough
-#LOCAL_LDLIBS := -lz -llog -landroid -lm
-# cflags
-#LOCAL_CFLAGS := -DANDROID
-#LOCAL_CFLAGS += -Werror -Wno-unused-parameter -Wno-#warnings -Wuninitialized -Wno-self-assign -Wno-implicit-fallthrough
-
-#LOCAL_EXPORT_C_INCLUDE_DIRS := ./jni/fdkaac/$(TARGET_ARCH_ABI)/include
-# $(info "LOCAL_EXPORT_C_INCLUDE_DIRS = $(LOCAL_EXPORT_C_INCLUDE_DIRS)")
+LOCAL_EXPORT_C_INCLUDE_DIRS := $(LOCAL_PATH)/../../jni/fdkaac/$(TARGET_ARCH_ABI)/include
+$(info "LOCAL_PATH = $(LOCAL_PATH)")
+$(info "LOCAL_EXPORT_C_INCLUDE_DIRS = $(LOCAL_EXPORT_C_INCLUDE_DIRS)")
 
 
 #LOCAL_EXPORT_SHARED_LIBRARY_HEADERS := $(HEADER_LIST:$(LOCAL_PATH)/%=%)
@@ -137,7 +93,7 @@ LOCAL_C_INCLUDES := \
 # $(info "LOCAL_EXPORT_SHARED_LIBRARY_HEADERS = $(LOCAL_EXPORT_SHARED_LIBRARY_HEADERS)")
 
 # 设置输出目录
-#NDK_APP_DST_DIR := ./jni/fdkaac/$(TARGET_ARCH_ABI)/lib
+
 
 
 # BUILD_SHARED_LIBRARY 变量指向一个 GNU Makefile 脚本，该脚本会收集最近 include 以来在 LOCAL_XXX 变量中定义的所有信息
