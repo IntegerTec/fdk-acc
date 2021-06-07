@@ -7,8 +7,6 @@ include $(CLEAR_VARS)
 # 每个模块名称必须唯一，且不含任何空格
 LOCAL_MODULE := FraunhoferAAC
 
-NDK_APP_DST_DIR := ./jni/fdkaac/$(TARGET_ARCH_ABI)/lib
-
 aacdec_sources := $(wildcard $(LOCAL_PATH)/libAACdec/src/*.cpp)
 aacdec_sources := $(aacdec_sources:$(LOCAL_PATH)/libAACdec/src/%=%)
 
@@ -80,12 +78,7 @@ LOCAL_C_INCLUDES := \
         $(LOCAL_PATH)/libSBRenc/include \
         $(LOCAL_PATH)/libSACdec/include \
         $(LOCAL_PATH)/libSACenc/include \
-        $(LOCAL_PATH)/libDRCdec/include \
-
-
-LOCAL_EXPORT_C_INCLUDE_DIRS := $(LOCAL_PATH)/../../jni/fdkaac/$(TARGET_ARCH_ABI)/include
-$(info "LOCAL_PATH = $(LOCAL_PATH)")
-$(info "LOCAL_EXPORT_C_INCLUDE_DIRS = $(LOCAL_EXPORT_C_INCLUDE_DIRS)")
+        $(LOCAL_PATH)/libDRCdec/include
 
 
 #LOCAL_EXPORT_SHARED_LIBRARY_HEADERS := $(HEADER_LIST:$(LOCAL_PATH)/%=%)
@@ -93,7 +86,23 @@ $(info "LOCAL_EXPORT_C_INCLUDE_DIRS = $(LOCAL_EXPORT_C_INCLUDE_DIRS)")
 # $(info "LOCAL_EXPORT_SHARED_LIBRARY_HEADERS = $(LOCAL_EXPORT_SHARED_LIBRARY_HEADERS)")
 
 # 设置输出目录
+FDK_AAC_SRC_INCLUDE_DIR := $(LOCAL_PATH)/libAACdec \
+		$(LOCAL_PATH)/libAACenc \
+        $(LOCAL_PATH)/libArithCoding \
+        $(LOCAL_PATH)/libPCMutils \
+        $(LOCAL_PATH)/libFDK \
+        $(LOCAL_PATH)/libSYS \
+        $(LOCAL_PATH)/libMpegTPDec \
+        $(LOCAL_PATH)/libMpegTPEnc \
+        $(LOCAL_PATH)/libSBRdec \
+        $(LOCAL_PATH)/libSBRenc \
+        $(LOCAL_PATH)/libSACdec \
+        $(LOCAL_PATH)/libSACenc \
+        $(LOCAL_PATH)/libDRCdec
 
+FDK_AAC_DST_LIB_DIR := $(LOCAL_PATH)/../../jni/fdkaac
+FDK_AAC_DST_INCLUDE_DIR := $(LOCAL_PATH)/../../jni/fdkaac/include
+NDK_APP_DST_DIR := $(FDK_AAC_DST_LIB_DIR)/lib/$(TARGET_ARCH_ABI)
 
 
 # BUILD_SHARED_LIBRARY 变量指向一个 GNU Makefile 脚本，该脚本会收集最近 include 以来在 LOCAL_XXX 变量中定义的所有信息
@@ -101,6 +110,12 @@ $(info "LOCAL_EXPORT_C_INCLUDE_DIRS = $(LOCAL_EXPORT_C_INCLUDE_DIRS)")
 # BUILD_STATIC_LIBRARY 静态库
 # BUILD_SHARED_LIBRARY 动态库
 # BUILD_EXECUTABLE 可执行文件
-#include $(BUILD_SHARED_LIBRARY)
-include $(BUILD_STATIC_LIBRARY)
+include $(BUILD_SHARED_LIBRARY)
+#include $(BUILD_STATIC_LIBRARY)
+$(shell rm -rf $(FDK_AAC_DST_LIB_DIR))
+$(shell mkdir -p $(FDK_AAC_DST_LIB_DIR))
+$(foreach dir, $(FDK_AAC_SRC_INCLUDE_DIR), $(shell cp -rf $(dir) $(FDK_AAC_DST_INCLUDE_DIR)))
+#$(info "LOCAL_C_INCLUDES = $(LOCAL_C_INCLUDES)")
+#$(shell cp -af $(LOCAL_C_INCLUDES) $(FDK_AAC_INCLUDE_DIR))
+#$(info "LOCAL_INSTALLED11111 = $(LOCAL_INSTALLED)")
 
